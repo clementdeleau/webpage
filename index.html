@@ -86,7 +86,7 @@
             <figure class="gallery" id="gallery" aria-label="Photos of Clément"><div class="gallery-dots"></div></figure>
             <div class="stat"><strong>16</strong><span>works on ORCID: journal articles, conference papers, thesis</span></div>
             <div class="stat"><strong>6</strong><span>fellowships &amp; awards, incl. JSPS and RIKEN SPDR</span></div>
-            <div class="stat"><strong>3</strong><span>countries of research: France · Australia · Japan</span></div>
+            <div class="stat"><strong>5</strong><span>countries studied, taught or worked in: France · Malaysia · Australia · Thailand · Japan</span></div>
           </div>
         </div>
       </div>
@@ -158,15 +158,17 @@
             </div>
           </div>
           <div>
-            <h3 class="sub">Internships</h3>
+            <h3 class="sub">Internships &amp; exchange</h3>
             <ul class="mini card reveal">
               <li><span class="y">2017</span><div>Engineer Intern, Sydney Astrophotonics Instrumentation Laboratory, University of Sydney, Australia<small>Advisor: Dr. Sergio Leon-Saval</small></div></li>
+              <li><span class="y">2016</span><div>Exchange semester, Malaysia<small>During my engineering studies at INSA Toulouse</small></div></li>
               <li><span class="y">2016</span><div>Engineer Intern, Laboratory for Physics and Chemistry of Nano-Objects (LPCNO), Toulouse<small>Advisor: Dr. Julian Carrey</small></div></li>
               <li><span class="y">2015–16</span><div>Part-time Engineer Intern, National Laboratory for Intense Magnetic Fields (LNCMI), Toulouse<small>Advisor: Jeremy Grisolia</small></div></li>
             </ul>
             <h3 class="sub" style="margin-top:28px">Teaching</h3>
             <ul class="mini card reveal">
-              <li><span class="y">2018–23</span><div>Part-time assistant professor, computer programming<small>Toulouse INP (ENSEEIHT)</small></div></li>
+              <li><span class="y">2018–23</span><div>Part-time lecturer, C programming language<small>Toulouse INP (ENSEEIHT), five years during my PhD and first postdoc</small></div></li>
+              <li><span class="y">2 months</span><div>Assistant Professor, Thailand<small>Two-month teaching position abroad</small></div></li>
             </ul>
             <h3 class="sub" style="margin-top:28px">Expertise</h3>
             <div class="tags reveal">
@@ -175,6 +177,24 @@
               <span class="tag">Single-photon sources</span><span class="tag">Carbon nanotubes</span><span class="tag">Long-period gratings</span>
               <span class="tag">Optical feedback interferometry</span><span class="tag">Instrumentation</span><span class="tag">Machine learning</span>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="journey">
+      <div class="wrap">
+        <div class="kicker">journey</div>
+        <h2>Where I've studied, taught and worked</h2>
+        <div class="journey card reveal">
+          <div class="map-wrap">
+            <canvas id="map" aria-label="Animated map of Clément's journey: France, Malaysia, Australia, Thailand and Japan"></canvas>
+          </div>
+          <div class="stop-panel" aria-live="polite">
+            <div class="stop-meta"><span id="stop-when"></span><span id="stop-where"></span></div>
+            <h3 id="stop-title"></h3>
+            <p id="stop-text"></p>
+            <ol class="stops" id="stops"></ol>
           </div>
         </div>
       </div>
@@ -309,6 +329,8 @@
   </script>
   <script src="site.js"></script>
   <script src="anim.js"></script>
+  <script src="map-data.js"></script>
+  <script src="map.js"></script>
   <script type="module" src="voxel-lab.js"></script>
 </body>
 </html>
