@@ -1,6 +1,8 @@
 // Animated voxel scenes for the hero, built with three.js:
 //  - "lab": Clément at an optical table, steering a laser onto a silicon photonic
 //    chip that emits single photons to a detector.
+//  - "clean": Clément in a cleanroom bunny suit holding a silicon wafer.
+//  - "talk": Clément presenting his research to a conference audience.
 //  - "ai": Clément at his workstation training a neural network on a GPU cluster.
 // site.js picks the scene through window.voxelScene.
 import * as THREE from "three";
@@ -18,8 +20,9 @@ const scene = new THREE.Scene();
 // Orthographic camera + OrbitControls with auto-rotate and a spin-in intro,
 // in the style of craftz.dog.
 const camera = new THREE.OrthographicCamera(-20, 20, 15, -15, 0.1, 500);
-const lab = new THREE.Group(), ai = new THREE.Group(), shared = new THREE.Group();
-scene.add(lab, ai, shared);
+const lab = new THREE.Group(), ai = new THREE.Group(), clean = new THREE.Group(), talk = new THREE.Group(), shared = new THREE.Group();
+scene.add(lab, ai, clean, talk, shared);
+const GROUPS = { lab, ai, clean, talk };
 
 // ---------- voxel builder ----------
 let seed = 7;
@@ -360,6 +363,147 @@ typeL.position.x -= 0.5; typeR.position.x -= 0.5;
 seated.position.set(-0.5, 0, 0);
 ai.add(seated);
 
+// ---------- cleanroom scene: bunny suit, wafer, lithography tool ----------
+const suit = "#f1f5f9", suitShade = "#dbe3ee";
+const fab = Vox();
+// yellow-light panels (lithography bay) on the back wall
+for (const x0 of [-12, -2, 8]) fab.fill(x0, 18, -11, x0 + 6, 20, -10, "#fde047");
+// wet bench with sink and fume hood
+fab.fill(-14, 0, -10, -4, 7, -5, (x, y) => (y === 6 ? "#cbd5e1" : "#e2e8f0"))
+  .fill(-12, 7, -9, -9, 8, -6, "#94a3b8") // sink rim
+  .fill(-14, 7, -10, -13, 16, -5, "#cbd5e1").fill(-5, 7, -10, -4, 16, -5, "#cbd5e1").fill(-14, 15, -10, -4, 16, -5, "#cbd5e1")
+  .fill(-8, 7, -8, -6, 8, -6, "#334155"); // spin coater base
+// lithography tool (e-beam style column on a cabinet)
+fab.fill(4, 0, -10, 14, 10, -3, (x, y, z) => (z === -4 && y >= 4 && y <= 7 && x >= 6 && x <= 11 ? "#0f172a" : y === 9 ? "#cbd5e1" : "#e5e7eb"))
+  .fill(7, 10, -8, 11, 18, -5, (x, y) => (y % 3 === 0 ? "#94a3b8" : "#cbd5e1"))
+  .fill(6, 18, -9, 12, 19, -4, "#64748b")
+  .add(5, 8, -3, "#22c55e").add(5, 7, -3, "#22d3ee").add(5, 6, -3, "#facc15");
+// wafer carrier on a small cart
+fab.fill(-14, 0, 2, -9, 5, 6, (x, y) => (y === 4 ? "#94a3b8" : y === 0 ? "#64748b" : "#cbd5e1"))
+  .fill(-13, 5, 3, -10, 7, 5, "#93c5fd");
+clean.add(fab.build(0.03));
+const waferMats = (metal) => [new THREE.MeshStandardMaterial({ color: "#7d82a8" }), new THREE.MeshStandardMaterial({ map: waferTex, metalness: metal, roughness: 0.2 }), new THREE.MeshStandardMaterial({ color: "#7d82a8" })];
+// spinning wafer on the spin coater
+const spinWafer = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 0.15, 40), waferMats(0.6));
+spinWafer.position.set(-6.9, 8.2, -6.9); clean.add(spinWafer);
+// Clément in a bunny suit, holding a wafer
+const bunny = new THREE.Group();
+bunny.add(Vox()
+  .fill(1, 0, -9, 3, 1, -6, "#e2e8f0").fill(4, 0, -9, 6, 1, -6, "#e2e8f0") // booties
+  .fill(1, 1, -9, 3, 7, -7, suitShade).fill(4, 1, -9, 6, 7, -7, suitShade) // legs
+  .fill(1, 7, -9, 6, 14, -7, (x, y, z) => (x === 3 && z === -8 ? "#cbd5e1" : suit)) // body + zip
+  .fill(1, 14, -10, 6, 20, -6, suit) // hood
+  .fill(1, 16, -6, 6, 18, -5, (x, y) => (y === 17 ? "#7dd3fc" : skin)) // eyes behind the visor
+  .fill(1, 14, -6, 6, 16, -5, "#e2e8f0") // face mask
+  .fill(2, 20, -9, 5, 21, -7, suitShade)
+  .build(0.02));
+function suitArm(x) {
+  const pivot = new THREE.Group(); pivot.position.set(x, 14, -8);
+  pivot.add(Vox().fill(0, -6, -1, 1, 0, 1, suit).fill(0, -7, -1, 1, -6, 1, "#a78bfa").build(0.02)); // nitrile gloves
+  bunny.add(pivot); return pivot;
+}
+const holdR = suitArm(6), holdL = suitArm(0);
+bunny.position.set(-1, 0, 2);
+clean.add(bunny);
+const heldWafer = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.4, 0.15, 48), waferMats(0.8));
+heldWafer.position.set(2, 10.6, 0.6); clean.add(heldWafer);
+const waferGlint = glow("#e0e7ff", 2.4, clean);
+// laminar air flow: particles drifting down from the ceiling filters
+const dustN = 160, dustPos = new Float32Array(dustN * 3);
+for (let i = 0; i < dustN; i++) { dustPos[i * 3] = rand() * 30 - 15; dustPos[i * 3 + 1] = rand() * 22; dustPos[i * 3 + 2] = rand() * 20 - 11; }
+const dustGeo = new THREE.BufferGeometry();
+dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPos, 3));
+clean.add(new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: "#fef9c3", size: 0.2, transparent: true, opacity: 0.8 })));
+const yellow = new THREE.PointLight("#fde047", 60, 40, 1.6); yellow.position.set(0, 20, -4); clean.add(yellow);
+
+// ---------- conference scene: a talk in front of an audience ----------
+const hall = Vox();
+hall.fill(-16, -1, -12, 16, 0, 10, (x, y, z) => (((x * 3 + z) % 7 + 7) % 7 === 0 ? "#1e3a8a" : "#1e293b")); // carpet
+hall.fill(-14, 0, -11, 14, 3, -3, (x, y) => (y === 2 ? "#6b4f35" : "#3f2e20")); // stage
+hall.fill(10, 3, -7, 13, 10, -5, (x, y, z) => (z === -6 && y === 7 ? "#2563eb" : "#7a5a3c")) // podium
+  .fill(10, 10, -7, 13, 11, -6, "#5b4330").add(11, 11, -7, "#111827");
+const hallBackMesh = Vox().fill(-16, 0, -12, 16, 22, -11, (x, y) => (y < 2 ? "#0f172a" : "#172554")).build(0.04);
+const hallSideMesh = Vox().fill(-17, 0, -12, -16, 22, 10, (x, y, z) => (((z % 6) + 6) % 6 === 0 && y > 2 && y < 18 ? "#1d4ed8" : "#172554")).build(0.04);
+talk.add(hall.build(0.04), hallBackMesh, hallSideMesh);
+// projected slides
+const slide = makeScreen(480, 270);
+const slideMesh = new THREE.Mesh(new THREE.PlaneGeometry(20, 11.25), new THREE.MeshBasicMaterial({ map: slide.tx }));
+slideMesh.position.set(-4, 13, -10.9); talk.add(slideMesh);
+function drawSlide(t) {
+  const { x, c, tx } = slide, k = Math.floor(t / 5) % 3, W = c.width, H = c.height;
+  x.fillStyle = "#f8fafc"; x.fillRect(0, 0, W, H);
+  x.fillStyle = "#1d4ed8"; x.fillRect(0, 0, W, 8);
+  x.fillStyle = "#0b1a33"; x.font = "bold 24px sans-serif";
+  x.fillText(["Single photons on a chip", "Photon antibunching", "Integrated LPG sensors"][k], 20, 46);
+  x.strokeStyle = "#0ea5e9"; x.lineWidth = 3;
+  x.font = "15px sans-serif";
+  if (k === 0) {
+    x.beginPath(); x.moveTo(40, 175); x.lineTo(440, 175); x.stroke();
+    x.beginPath(); x.arc(300, 128, 40, 0, 7); x.stroke();
+    x.fillStyle = "#ec4899"; x.beginPath(); x.arc(130, 175, 7 + Math.sin(t * 6) * 2, 0, 7); x.fill();
+    x.fillStyle = "#0b1a33"; x.fillText("CNT emitter → cavity → waveguide circuit", 40, 235);
+  } else if (k === 1) {
+    x.beginPath();
+    for (let i = 0; i <= 400; i += 4) { const u = (i - 200) / 24, y = 210 - 130 * (1 - 0.8 * Math.exp(-Math.abs(u))); i ? x.lineTo(40 + i, y) : x.moveTo(40 + i, y); }
+    x.stroke(); x.fillStyle = "#0b1a33"; x.fillText("g²(τ)", 40, 75); x.fillText("τ", 445, 225);
+  } else {
+    for (const [sh, col] of [[0, "#0ea5e9"], [40 + Math.sin(t) * 10, "#f59e0b"]]) {
+      x.strokeStyle = col; x.beginPath();
+      for (let i = 0; i <= 400; i += 4) { const u = (i - 160 - sh) / 26, y = 90 + 110 * Math.exp(-u * u); i ? x.lineTo(40 + i, y) : x.moveTo(40 + i, y); }
+      x.stroke();
+    }
+    x.fillStyle = "#0b1a33"; x.fillText("resonance shift with refractive index", 40, 240);
+  }
+  x.fillStyle = "#94a3b8"; x.font = "12px sans-serif"; x.fillText("C. Deleau · RIKEN", W - 120, H - 12);
+  tx.needsUpdate = true;
+}
+// speaker: Clément on stage, facing the audience, pointing at the slide with a laser pointer
+const speaker = new THREE.Group();
+speaker.add(Vox()
+  .fill(1, 0, -9, 3, 1, -6, "#1f2937").fill(4, 0, -9, 6, 1, -6, "#1f2937")
+  .fill(1, 1, -9, 3, 7, -7, "#1e293b").fill(4, 1, -9, 6, 7, -7, "#1e293b")
+  .fill(1, 7, -9, 6, 14, -7, (x, y, z) => (x === 3 && y >= 11 && z === -8 ? "#e2e8f0" : "#1d4ed8")) // blazer, open collar
+  .fill(1, 14, -10, 6, 19, -6, skin)
+  .fill(1, 19, -10, 6, 20, -6, hair).fill(1, 16, -10, 6, 19, -9, hair).fill(1, 17, -10, 2, 19, -6, hair).fill(5, 17, -10, 6, 19, -6, hair)
+  .fill(1, 18, -6, 6, 19, -5, hair)
+  .fill(1, 17, -6, 6, 18, -5, (x) => (x === 2 || x === 4 ? "#1e3a8a" : skin)) // eyes
+  .fill(1, 14, -6, 6, 16, -5, (x, y) => (x === 3 && y === 15 ? "#b0705c" : beard)).fill(1, 16, -6, 2, 17, -5, beard).fill(5, 16, -6, 6, 17, -5, beard)
+  .build(0.03));
+function speakerArm(x) {
+  const pivot = new THREE.Group(); pivot.position.set(x + 0.5, 14, -8);
+  pivot.add(Vox().fill(-0.5, -6, -1, 0.5, 0, 1, "#1d4ed8").fill(-0.5, -7, -1, 0.5, -6, 1, skin).build(0.02));
+  speaker.add(pivot); return pivot;
+}
+const pointArm = speakerArm(0), restArm = speakerArm(6);
+speaker.position.set(2, 3, 2);
+talk.add(speaker);
+const laserDot = glow("#ff3b3b", 1.6, talk);
+const laserBeam = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 1), new THREE.MeshBasicMaterial({ color: "#ff3b3b", transparent: true, opacity: 0.75 }));
+talk.add(laserBeam);
+// audience, seated facing the stage
+const audience = [];
+const shirts = ["#ef4444", "#f59e0b", "#10b981", "#6366f1", "#e2e8f0", "#0ea5e9", "#a855f7", "#64748b"];
+const hairs = ["#1f2937", "#5a3d26", "#a16207", "#111827", "#9ca3af"];
+let seatN = 0;
+for (const [row, z] of [[0, 0], [1, 3], [2, 6]]) {
+  for (let i = 0; i < 5; i++) {
+    const g = new THREE.Group();
+    const body = new THREE.Group();
+    g.add(Vox().fill(0, 0, 0, 3, 3, 3, "#334155").fill(0, 3, 2, 3, 6, 3, "#334155").build(0.03)); // chair
+    body.add(Vox()
+      .fill(0, 3, 0, 3, 6, 2, shirts[(seatN * 3 + row) % shirts.length])
+      .fill(0, 6, 0, 3, 9, 3, (x, y, zz) => (y === 8 || zz === 2 ? hairs[seatN % hairs.length] : skin)).build(0.03));
+    g.add(body);
+    g.position.set(-13 + i * 5 + (row % 2) * 2, 0, z);
+    talk.add(g); audience.push({ body, ph: rand() * 6 });
+    seatN++;
+  }
+}
+const stageLight = new THREE.SpotLight("#fff7ed", 400, 70, 0.5, 0.5, 1.4);
+stageLight.position.set(8, 32, 14); stageLight.target.position.set(2, 10, -4);
+talk.add(stageLight, stageLight.target);
+const handPos = new THREE.Vector3(), dotPos = new THREE.Vector3();
+
 // ---------- lights ----------
 scene.add(new THREE.HemisphereLight("#dfe6ff", "#3b3f5c", 1.6));
 const sun = new THREE.DirectionalLight("#ffffff", 2.2);
@@ -373,6 +517,8 @@ const beamLight = new THREE.PointLight("#39ff88", 18, 14, 2); beamLight.position
 const VIEWS = {
   lab: { target: new THREE.Vector3(-1, 7, -1), pos: new THREE.Vector3(32, 30, 44), size: 25 },
   ai: { target: new THREE.Vector3(1, 11, -3), pos: new THREE.Vector3(38, 30, 40), size: 27 },
+  clean: { target: new THREE.Vector3(0, 9, -3), pos: new THREE.Vector3(30, 28, 46), size: 24 },
+  talk: { target: new THREE.Vector3(0, 9, -2), pos: new THREE.Vector3(26, 32, 48), size: 23 },
 };
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
@@ -401,10 +547,14 @@ function resize() {
 }
 
 // craftz.dog-style intro: the camera swirls in and settles, then OrbitControls take over
-let intro = 0, introFrom = null;
+// After that, scene changes only glide the orbit target and zoom.
+let intro = 0, introFrom = null, wantSize = 25;
+const wantTarget = new THREE.Vector3();
 const easeOutCirc = x => Math.sqrt(1 - Math.pow(x - 1, 4));
-function enterView(name) {
+function enterView(name, first) {
   const v = VIEWS[name];
+  wantSize = v.size; wantTarget.copy(v.target);
+  if (!first) return;
   viewSize = v.size;
   controls.target.copy(v.target);
   introFrom = v.pos.clone().sub(v.target);
@@ -412,12 +562,94 @@ function enterView(name) {
   resize();
 }
 
-let lastScene = null;
+// ---------- cascade transitions ----------
+// Outgoing voxels fly up and away (top layers first); incoming voxels rain down
+// from above and stack up from the floor.
+const DROP = 45;
+const easeInCubic = x => x * x * x, easeOutCubic = x => 1 - Math.pow(1 - x, 3);
+const cascadeData = new Map();
+function cascadeOf(group) {
+  if (cascadeData.has(group)) return cascadeData.get(group);
+  const items = [], loose = [], m = new THREE.Matrix4();
+  group.traverse(o => {
+    if (o.isInstancedMesh) {
+      const n = o.count, base = new Float32Array(n * 3), jit = new Float32Array(n);
+      for (let i = 0; i < n; i++) {
+        o.getMatrixAt(i, m);
+        base[i * 3] = m.elements[12]; base[i * 3 + 1] = m.elements[13]; base[i * 3 + 2] = m.elements[14];
+        jit[i] = rand();
+      }
+      o.frustumCulled = false;
+      items.push({ mesh: o, base, jit });
+    } else if (o.isMesh || o.isSprite || o.isPoints || o.isLine) loose.push(o);
+  });
+  const data = { items, loose };
+  cascadeData.set(group, data);
+  return data;
+}
+function cascade(group, mode, P) {
+  const { items } = cascadeOf(group), m = new THREE.Matrix4();
+  for (const { mesh, base, jit } of items) {
+    for (let i = 0; i < mesh.count; i++) {
+      const y = base[i * 3 + 1], h = Math.min(Math.max((y + 1) / 24, 0), 1);
+      const delay = (mode === "in" ? h : 1 - h) * 0.55 + jit[i] * 0.15;
+      const p = Math.min(Math.max((P - delay) / 0.3, 0), 1);
+      const off = mode === "in" ? (1 - easeOutCubic(p)) * DROP : easeInCubic(p) * DROP;
+      m.makeTranslation(base[i * 3], y + off, base[i * 3 + 2]);
+      mesh.setMatrixAt(i, m);
+    }
+    mesh.instanceMatrix.needsUpdate = true;
+  }
+}
+const setLoose = (groups, on) => groups.forEach(g => cascadeOf(g).loose.forEach(o => { o.visible = on; }));
+const setsFor = name => (name === "talk" ? [talk] : [GROUPS[name], shared]);
+let cur = null, trans = null, lastT = null;
+function startTransition(next) {
+  if (cur === null) {
+    for (const k in GROUPS) GROUPS[k].visible = false;
+    shared.visible = false;
+    const groups = setsFor(next);
+    groups.forEach(g => { g.visible = true; cascade(g, "in", 0); });
+    setLoose(groups, false);
+    cur = next; enterView(next, true);
+    trans = { phase: "in", groups, P: 0 };
+    return;
+  }
+  const keep = setsFor(next);
+  const groups = setsFor(cur).filter(g => !keep.includes(g));
+  setLoose(groups, false);
+  trans = { phase: "out", next, groups, P: 0 };
+  enterView(next, false);
+}
+function advance(dt) {
+  trans.P = Math.min(trans.P + dt / (trans.phase === "out" ? 0.9 : 1.3), 1);
+  trans.groups.forEach(g => cascade(g, trans.phase, trans.P));
+  if (trans.P < 1) return;
+  if (trans.phase === "out") {
+    trans.groups.forEach(g => { g.visible = false; });
+    const prev = setsFor(cur);
+    cur = trans.next;
+    const groups = setsFor(cur).filter(g => !prev.includes(g) || !g.visible);
+    groups.forEach(g => { g.visible = true; cascade(g, "in", 0); });
+    setLoose(groups, false);
+    trans = { phase: "in", groups, P: 0 };
+    return;
+  }
+  setLoose(setsFor(cur), true);
+  trans = null;
+}
+
 function frame(t) {
+  const dt = lastT === null ? 0 : Math.min(Math.max(t - lastT, 0), 0.1);
+  lastT = t;
   resize();
   if (window.voxelActive === false) return;
-  const which = window.voxelScene === "ai" ? "ai" : "lab";
-  if (which !== lastScene) { lab.visible = which === "lab"; ai.visible = which === "ai"; lastScene = which; enterView(which); }
+  const want = GROUPS[window.voxelScene] ? window.voxelScene : "lab";
+  if (!trans && want !== cur) startTransition(want);
+  if (trans) advance(dt);
+  const which = cur;
+  controls.target.lerp(wantTarget, 0.05);
+  viewSize += (wantSize - viewSize) * 0.05;
   if (intro > 0 && intro <= 110) {
     const k = easeOutCirc(intro / 110), rot = -(1 - k) * Math.PI * 3;
     const p = introFrom;
@@ -430,8 +662,37 @@ function frame(t) {
   } else {
     controls.update();
   }
-  backWallMesh.visible = camera.position.z > -11;
-  sideWallMesh.visible = camera.position.x > -16;
+  backWallMesh.visible = hallBackMesh.visible = camera.position.z > -11;
+  sideWallMesh.visible = hallSideMesh.visible = camera.position.x > -16;
+  if (which === "clean") {
+    spinWafer.rotation.y = t * 12;
+    holdR.rotation.x = holdL.rotation.x = -1.0 + Math.sin(t * 0.8) * 0.05;
+    heldWafer.rotation.set(0.35 + Math.sin(t * 0.8) * 0.15, t * 0.2, Math.sin(t * 0.5) * 0.1);
+    heldWafer.position.y = 10.6 + Math.sin(t * 0.8) * 0.3;
+    waferGlint.position.set(2 + Math.sin(t * 1.3) * 1.5, heldWafer.position.y + 0.4, 0.6 + Math.cos(t * 1.3) * 1.2);
+    waferGlint.material.opacity = 0.5 + 0.5 * Math.sin(t * 2.6);
+    bunny.rotation.y = Math.sin(t * 0.4) * 0.05;
+    for (let i = 0; i < dustN; i++) { dustPos[i * 3 + 1] -= 0.04; if (dustPos[i * 3 + 1] < 0) dustPos[i * 3 + 1] = 22; }
+    dustGeo.attributes.position.needsUpdate = true;
+    renderer.render(scene, camera);
+    return;
+  }
+  if (which === "talk") {
+    pointArm.rotation.set(0.35, 0, -2.1 + Math.sin(t * 0.9) * 0.12);
+    restArm.rotation.set(-0.5 + Math.sin(t * 1.7) * 0.25, 0, 0.1);
+    speaker.rotation.y = Math.sin(t * 0.6) * 0.15;
+    pointArm.updateWorldMatrix(true, false);
+    handPos.set(0, -7, 0); pointArm.localToWorld(handPos);
+    dotPos.set(-4 + Math.sin(t * 0.7) * 6, 13 + Math.sin(t * 1.1) * 3, -10.8);
+    laserDot.position.copy(dotPos);
+    laserBeam.position.lerpVectors(handPos, dotPos, 0.5);
+    laserBeam.scale.z = handPos.distanceTo(dotPos);
+    laserBeam.lookAt(dotPos);
+    audience.forEach(a => { a.body.position.y = Math.max(0, Math.sin(t * 1.5 + a.ph)) * 0.25; a.body.rotation.y = Math.sin(t * 0.5 + a.ph) * 0.12; });
+    drawSlide(t);
+    renderer.render(scene, camera);
+    return;
+  }
   if (which === "ai") {
     typeL.rotation.x = 1.05 + Math.sin(t * 14) * 0.06;
     typeR.rotation.x = 1.05 + Math.sin(t * 14 + 1.7) * 0.06;

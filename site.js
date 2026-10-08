@@ -58,64 +58,63 @@
   function waveLoop(ms) { if (!wavesOn) return; drawWaves(ms / 1000); requestAnimationFrame(waveLoop); }
   drawWaves(0);
 
-  // ---------- hero slideshow: voxel scenes + photos ----------
-  const holder = document.getElementById("slides");
-  if (holder) {
+  // ---------- hero: voxel scene switcher ----------
+  const tabs = document.getElementById("scene-tabs");
+  if (tabs && window.SCENES) {
+    const scenes = window.SCENES;
     const scan = document.getElementById("scan");
-    const dots = document.getElementById("dots");
     const labelText = document.getElementById("label-text");
-    const voxelEl = holder.querySelector(".slide.voxel");
-    const list = window.SLIDES || [{ voxel: "lab", label: voxelEl.dataset.label }];
-    const els = list.map(item => {
-      if (item.voxel) return voxelEl;
-      const s = document.createElement("div");
-      s.className = "slide photo";
-      const img = new Image();
-      img.src = item.src; img.alt = item.label; img.decoding = "async";
-      if (item.pos) img.style.objectPosition = item.pos;
-      s.appendChild(img);
-      holder.insertBefore(s, scan);
-      return s;
-    });
-    let cur = 0, timer = null;
-    list.forEach((_, i) => {
+    let cur = 0, timer = null, paused = false;
+    const btns = scenes.map((sc, i) => {
       const b = document.createElement("button");
-      b.setAttribute("aria-label", "Show slide " + (i + 1));
-      b.addEventListener("click", () => show(i));
-      dots.appendChild(b);
+      b.type = "button"; b.textContent = sc.name; b.setAttribute("role", "tab");
+      b.addEventListener("click", () => { paused = true; show(i); clearTimeout(timer); timer = setTimeout(() => { paused = false; schedule(); }, 15000); });
+      tabs.appendChild(b); return b;
     });
-    const dotEls = [...dots.children];
-    if (list.length < 2) dots.style.display = "none";
-
-    function apply(i) {
-      const item = list[i];
-      labelText.textContent = item.label;
-      dotEls.forEach((d, k) => d.classList.toggle("on", k === i));
-      window.voxelActive = !!item.voxel;
-      if (item.voxel) window.voxelScene = item.voxel;
-    }
-    function show(n) {
-      if (n === cur) return;
-      const prev = els[cur], next = els[n];
-      next.classList.remove("entering"); void next.offsetWidth;
-      next.classList.add("active", "entering");
-      if (prev !== next) setTimeout(() => prev.classList.remove("active"), 1100);
-      setTimeout(() => next.classList.remove("entering"), 1100);
+    function show(i) {
+      cur = i;
+      window.voxelScene = scenes[i].id;
+      labelText.textContent = scenes[i].label;
+      btns.forEach((b, k) => { b.classList.toggle("on", k === i); b.setAttribute("aria-selected", k === i); });
       scan.classList.remove("go"); void scan.offsetWidth; scan.classList.add("go");
-      cur = n;
-      apply(n);
-      schedule();
+      if (!paused) schedule();
     }
-    function schedule() {
-      clearTimeout(timer);
-      if (list.length < 2) return;
-      timer = setTimeout(() => show((cur + 1) % list.length), list[cur].hold || 6000);
+    function schedule() { clearTimeout(timer); timer = setTimeout(() => show((cur + 1) % scenes.length), 4500); }
+    // ?scene=clean opens the hero on a given scene
+    const q = new URLSearchParams(location.search).get("scene");
+    const first = Math.max(scenes.findIndex(sc => sc.id === q), 0);
+    if (q) paused = true; // a shared link to one scene stays on it until a tab is clicked
+    window.voxelActive = true;
+    show(first);
+  }
+
+  // ---------- about: photo gallery ----------
+  const gallery = document.getElementById("gallery");
+  if (gallery && window.PHOTOS && window.PHOTOS.length) {
+    const dotsEl = gallery.querySelector(".gallery-dots");
+    const imgs = window.PHOTOS.map((p, i) => {
+      const img = new Image();
+      img.src = p.src; img.alt = p.alt; img.decoding = "async"; img.loading = i ? "lazy" : "eager";
+      if (p.pos) img.style.objectPosition = p.pos;
+      gallery.insertBefore(img, dotsEl);
+      return img;
+    });
+    const dots = imgs.map((_, i) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.setAttribute("aria-label", "Photo " + (i + 1));
+      b.addEventListener("click", () => go(i));
+      dotsEl.appendChild(b); return b;
+    });
+    let gi = 0, gt = null;
+    function go(i) {
+      imgs[gi].classList.remove("on");
+      gi = i;
+      imgs[gi].classList.remove("on"); void imgs[gi].offsetWidth; imgs[gi].classList.add("on");
+      dots.forEach((d, k) => d.classList.toggle("on", k === gi));
+      clearTimeout(gt); gt = setTimeout(() => go((gi + 1) % imgs.length), 5000);
     }
-    // ?slide=N opens the hero on a given slide (handy for sharing a specific scene)
-    const startAt = Math.min(Math.max(parseInt(new URLSearchParams(location.search).get("slide"), 10) || 0, 0), list.length - 1);
-    if (startAt) { voxelEl.classList.remove("active"); els[startAt].classList.add("active"); cur = startAt; }
-    apply(cur);
-    schedule();
+    if (imgs.length < 2) dotsEl.style.display = "none";
+    go(0);
   }
 
   // ---------- page-to-page "warp" transition ----------

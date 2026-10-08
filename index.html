@@ -62,10 +62,11 @@
             </div>
             <div class="scan" id="scan"></div>
             <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
-            <div class="hud"><span class="label"><i></i><span id="label-text">LIVE · aligning a laser onto a silicon photonic chip</span></span><div class="dots" id="dots"></div></div>
+            <div class="hud"><span class="label"><i></i><span id="label-text">LIVE · aligning a laser onto a silicon photonic chip</span></span></div>
           </div>
         </div>
-        <p class="caption">voxel scenes + photos · drag a voxel scene to look around</p>
+        <div class="scene-tabs" id="scene-tabs" role="tablist" aria-label="Voxel scenes"></div>
+        <p class="caption">drag the scene to look around</p>
       </div>
     </div>
   </header>
@@ -82,7 +83,7 @@
             <p>My research covers the design, fabrication and experimental characterization of integrated photonic devices on lithium niobate and silicon nitride: integrating carbon-nanotube single-photon emitters into photonic circuits, electro-optically tunable resonators, and novel integrated spectroscopic systems. Along the way I've built expertise in nanofabrication, optical characterization, photonic device design and experimental instrumentation in international, multidisciplinary teams.</p>
           </div>
           <div class="card stats reveal">
-            <figure class="about-photo"><img src="img/portrait-forest.jpg" alt="Clément Deleau" loading="lazy"></figure>
+            <figure class="gallery" id="gallery" aria-label="Photos of Clément"><div class="gallery-dots"></div></figure>
             <div class="stat"><strong>16</strong><span>works on ORCID: journal articles, conference papers, thesis</span></div>
             <div class="stat"><strong>6</strong><span>fellowships &amp; awards, incl. JSPS and RIKEN SPDR</span></div>
             <div class="stat"><strong>3</strong><span>countries of research: France · Australia · Japan</span></div>
@@ -292,13 +293,18 @@
   <footer>© <span id="year"></span> Clément Deleau · built with light, hosted on GitHub Pages</footer>
 
   <script>
-    // Hero slideshow: voxel scenes ("lab", "ai") and photos in img/. Edit this list to reorder.
-    window.SLIDES = [
-      { voxel: "lab", label: "LIVE · aligning a laser onto a silicon photonic chip", hold: 10000 },
-      { src: "img/portrait-forest.jpg", label: "CLÉMENT DELEAU · photonics researcher", pos: "50% 45%", hold: 8000 },
-      { voxel: "ai", label: "LIVE · training a neural network on the GPU cluster", hold: 10000 },
-      { src: "img/light-painting.jpg", label: "LIGHT PAINTING · photons, long exposure", pos: "50% 45%" },
-      { src: "img/portrait-casual.jpg", label: "OFF THE BENCH", pos: "30% 40%" },
+    // Voxel scenes in the hero (ids match voxel-lab.js); they cycle automatically.
+    window.SCENES = [
+      { id: "lab", name: "Lab", label: "LIVE · aligning a laser onto a silicon photonic chip" },
+      { id: "clean", name: "Cleanroom", label: "LIVE · handling a wafer in the cleanroom" },
+      { id: "talk", name: "Conference", label: "LIVE · presenting single photons on a chip" },
+      { id: "ai", name: "AI", label: "LIVE · training a neural network on the GPU cluster" },
+    ];
+    // Photos in the About section gallery. pos = focal point when cropped.
+    window.PHOTOS = [
+      { src: "img/portrait-forest.jpg", alt: "Clément Deleau in a forest", pos: "50% 45%" },
+      { src: "img/light-painting.jpg", alt: "Light painting with LEDs", pos: "50% 45%" },
+      { src: "img/portrait-casual.jpg", alt: "Clément Deleau at home", pos: "30% 40%" },
     ];
   </script>
   <script src="site.js"></script>
