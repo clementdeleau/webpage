@@ -16,8 +16,8 @@
       text: "PhD at LAAS-CNRS on integrated long-period waveguide gratings for sensing, then postdoc at Toulouse INP (ENSEEIHT). Five years of part-time teaching of the C programming language." },
     { at: "thailand", where: "Thailand", when: "2022", title: "Assistant Professor",
       text: "A two-month position as assistant professor in Thailand." },
-    { at: "wako", where: "Wako, Japan", when: "2024 → now", title: "RIKEN Center for Advanced Photonics",
-      text: "JSPS fellow, then RIKEN Special Postdoctoral Researcher: single photons from carbon nanotubes on photonic chips." },
+    { at: "wako", where: "Tokyo, Japan", when: "2024 → now", title: "RIKEN Center for Advanced Photonics",
+      text: "JSPS fellow, then RIKEN Special Postdoctoral Researcher at RIKEN in Wako (Tokyo): single photons from carbon nanotubes on photonic chips." },
   ];
   const FLY = 0.9, STAY = 1.7;
 
