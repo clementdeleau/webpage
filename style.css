@@ -381,3 +381,6 @@ footer { text-align: center; color: var(--muted); padding: 40px 0 50px; font-siz
 .gallery-dots { position: absolute; left: 0; right: 0; bottom: 10px; z-index: 2; display: flex; justify-content: center; gap: 6px; }
 .gallery-dots button { width: 18px; height: 4px; border: 0; border-radius: 2px; background: rgba(255,255,255,.45); cursor: pointer; padding: 0; }
 .gallery-dots button.on { background: #22d3ee; box-shadow: 0 0 8px #22d3ee; }
+
+/* longer typed tagline lines: reserve two lines so the layout doesn't jump */
+.role { min-height: 3em; }

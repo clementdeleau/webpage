@@ -11,10 +11,11 @@
 
   // ---------- typed role line ----------
   const roles = [
-    "Postdoctoral researcher in integrated photonics",
-    "Single-photon sources on silicon nitride",
-    "Electro-optic lithium niobate resonators",
-    "On-chip optical sensors",
+    "Researcher in integrated photonics and optoelectronics",
+    "Carbon nanotube single-photon sources on photonic chips",
+    "On-chip optical modulation for spectrometric applications",
+    "Integrated optical sensors, from gas detection to picometric displacement",
+    "Spectral reading and control by artificial neural networks",
   ];
   const roleEl = document.getElementById("role");
   if (roleEl) {
