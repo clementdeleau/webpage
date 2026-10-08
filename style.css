@@ -85,6 +85,7 @@ h1 { font-size: clamp(2.5rem, 5.6vw, 4rem); line-height: 1.04; letter-spacing: -
   background: linear-gradient(90deg, #60a5fa, #38bdf8 45%, #22d3ee);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
+.subtitle { font-size: 1.2rem; font-weight: 600; color: #e6eefc; letter-spacing: -.01em; margin: -2px 0 8px; }
 .role { font-family: var(--mono); color: #7dd3fc; font-size: .95rem; margin-bottom: 18px; min-height: 1.5em; }
 .role .cursor { display: inline-block; width: .55em; height: 1.1em; background: #22d3ee; vertical-align: -2px; margin-left: 2px; animation: blink 1s steps(1) infinite; }
 .lead { font-size: 1.08rem; color: #b6c6e3; max-width: 34em; }

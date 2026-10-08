@@ -11,7 +11,6 @@
 
   // ---------- typed role line ----------
   const roles = [
-    "Researcher in integrated photonics and optoelectronics",
     "Carbon nanotube single-photon sources on photonic chips",
     "On-chip optical modulation for spectrometric applications",
     "Integrated optical sensors, from gas detection to nanometric displacement",
