@@ -32,6 +32,17 @@
     setTimeout(tick, 3200);
   }
 
+  // ---------- hero intro: key words light up one after another ----------
+  const kws = [...document.querySelectorAll("#lead .kw")];
+  if (kws.length) {
+    let k = 0;
+    setInterval(() => {
+      const el = kws[k % kws.length];
+      el.classList.remove("glow"); void el.offsetWidth; el.classList.add("glow");
+      k++;
+    }, 900);
+  }
+
   // ---------- background light waves in the hero ----------
   const wc = document.getElementById("waves") || document.createElement("canvas");
   const wx = wc.getContext("2d");
