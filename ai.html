@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI & high-performance computing · Clément Deleau</title>
+  <meta name="description" content="Neural networks trained on supercomputers for sensor calibration and photonic device optimization.">
+  <meta property="og:image" content="https://clementdeleau.github.io/webpage/img/og.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1f44'/%3E%3Cpath d='M8 40 L24 40 L32 18 L40 46 L46 32 L56 32' stroke='%2338bdf8' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body style="--c1:#22c55e;--c2:#5eead4">
+  <nav>
+    <div class="wrap">
+      <a class="logo" href="index.html">
+        <svg width="26" height="26" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0b2a6b"/><path d="M8 40 L24 40 L32 18 L40 46 L46 32 L56 32" stroke="#38bdf8" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Clément Deleau
+      </a>
+      <ul>
+        <li><a href="optoelectronics.html" data-warp>Optoelectronics</a></li>
+        <li><a href="cleanroom.html" data-warp>Cleanroom</a></li>
+        <li><a href="ai.html" data-warp>AI &amp; HPC</a></li>
+        <li><a href="index.html#publications">Publications</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="page-hero">
+    <canvas data-anim="ai" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <a class="back" href="index.html#research" data-warp>← back to home</a>
+      <div class="kicker" style="margin-top:28px;color:#5eead4">research / 03</div>
+      <h1>AI &amp; high-performance computing</h1>
+      <p class="lead">I use neural networks to read sensors better and to design photonic devices faster, training them on supercomputers and GPU clusters.</p>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="wrap">
+        <div class="topic reveal">
+          <div><h3>Machine learning for fiber sensing</h3><p>A long-period fiber grating responds to bending along its whole length, but untangling that spectral response by hand is hard. Pairing the grating with machine-learning numerical analysis made it possible to perform distributed curvature sensing from the measured spectra.</p><div class="tag-row"><span class="tag">Fiber gratings</span><span class="tag">Neural networks</span><span class="tag">Inverse problems</span></div></div>
+          <div><ul class="cite"><li><a href="https://doi.org/10.1364/OL.499042">Distributed curvature sensing using long period fiber grating and machine learning numerical analysis</a><small>C. Deleau, H. C. Seat, O. Bernal, F. Surre · Optics Letters, 2023</small></li></ul></div>
+        </div>
+        <div class="topic reveal">
+          <div><h3>Calibration networks on supercomputers</h3><p>I train calibration networks that map raw optical measurements to physical quantities. Large training runs and hyperparameter sweeps run on supercomputer and GPU-cluster resources rather than a desktop.</p><div class="tag-row"><span class="tag">HPC</span><span class="tag">GPU training</span><span class="tag">Calibration</span><span class="tag">Data pipelines</span></div></div>
+          <div><p class="note">Methods and results will be published; details follow here once they are out.</p></div>
+        </div>
+        <div class="topic reveal">
+          <div><h3>AI for photonic device optimization</h3><p>An ongoing project uses neural networks to speed up the optimization of photonic devices. It is unpublished, so I am keeping the details for later.</p><div class="tag-row"><span class="tag">Surrogate models</span><span class="tag">Optimization</span><span class="tag">Photonic design</span></div></div>
+          <div><p class="note">Work in progress · not yet published.</p></div>
+        </div>
+      </div>
+    </section>
+    <section style="padding-top:0">
+      <div class="wrap">
+        <div class="kicker">keep exploring</div>
+        <h2>Other research</h2>
+        <div class="next-pages">
+          <a class="dive reveal" href="optoelectronics.html" data-warp style="--c1:#0ea5e9;--c2:#22d3ee">
+            <canvas data-anim="optics" aria-hidden="true"></canvas>
+            <div class="dive-body"><span class="dive-n">01</span><h3>Optoelectronics &amp; quantum light</h3><span class="dive-go">Explore →</span></div>
+          </a>
+          <a class="dive reveal" href="cleanroom.html" data-warp style="--c1:#6366f1;--c2:#a5b4fc">
+            <canvas data-anim="fab" aria-hidden="true"></canvas>
+            <div class="dive-body"><span class="dive-n">02</span><h3>Cleanroom &amp; integrated photonics</h3><span class="dive-go">Explore →</span></div>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>© <span id="year"></span> Clément Deleau · <a href="index.html">home</a> · <a href="https://orcid.org/0000-0001-6063-9453">ORCID</a></footer>
+  <script src="site.js"></script>
+  <script src="anim.js"></script>
+</body>
+</html>
