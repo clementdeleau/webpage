@@ -14,8 +14,8 @@
     "Researcher in integrated photonics and optoelectronics",
     "Carbon nanotube single-photon sources on photonic chips",
     "On-chip optical modulation for spectrometric applications",
-    "Integrated optical sensors, from gas detection to picometric displacement",
-    "Spectral reading and control by artificial neural networks",
+    "Integrated optical sensors, from gas detection to nanometric displacement",
+    "Neural-network-controlled photonic circuits for spectral sensing and shaping",
   ];
   const roleEl = document.getElementById("role");
   if (roleEl) {
