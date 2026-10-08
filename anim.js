@@ -23,8 +23,8 @@
       x.strokeStyle = `rgba(56,189,248,${0.05 + 0.04 * Math.sin(i)})`; x.lineWidth = 1;
       x.beginPath(); x.arc(px - 200, y0, 200, -0.5, 0.5); x.stroke();
     }
-    // grating
-    for (let gx = w * (tight ? 0.05 : 0.1); gx < w * (tight ? 0.38 : 0.42); gx += tight ? 10 : 14) {
+    // grating (header version only; the ring modulator panel stays clean)
+    if (!tight) for (let gx = w * (tight ? 0.05 : 0.1); gx < w * (tight ? 0.38 : 0.42); gx += tight ? 10 : 14) {
       x.fillStyle = "rgba(125,211,252,.35)"; x.fillRect(gx, y0 - 10, tight ? 4 : 6, 20);
     }
     // electrodes around the ring, glowing with the drive voltage
@@ -59,7 +59,8 @@
       const a = -t * 2.2 + i * Math.PI / 2;
       x.fillStyle = `rgba(165,243,252,${0.4 + 0.6 * m})`; x.beginPath(); x.arc(cx + Math.cos(a) * R, cy + Math.sin(a) * R, 3, 0, 7); x.fill();
     }
-    // a carbon nanotube emitter flashing single photons
+    // a carbon nanotube emitter flashing single photons (header version only)
+    if (tight) { x.shadowBlur = 0; return; }
     const ex = w * (tight ? 0.24 : 0.27), ey = y0 + h * (tight ? 0.24 : 0.22);
     x.strokeStyle = "rgba(165,180,252,.8)"; x.lineWidth = 4; x.beginPath(); x.moveTo(ex - 22, ey + 6); x.lineTo(ex + 22, ey - 6); x.stroke();
     const ph = (t * 0.8) % 1;

@@ -14,7 +14,7 @@
       text: "Engineer intern at the Sydney Astrophotonics Instrumentation Laboratory, University of Sydney." },
     { at: "toulouse", where: "Toulouse, France", when: "2019 – 2023", title: "PhD, postdoc and teaching",
       text: "PhD at LAAS-CNRS on integrated long-period waveguide gratings for sensing, then postdoc at Toulouse INP (ENSEEIHT). Five years of part-time teaching of the C programming language." },
-    { at: "thailand", where: "Thailand", when: "2 months", title: "Assistant Professor",
+    { at: "thailand", where: "Thailand", when: "2022", title: "Assistant Professor",
       text: "A two-month position as assistant professor in Thailand." },
     { at: "wako", where: "Wako, Japan", when: "2024 → now", title: "RIKEN Center for Advanced Photonics",
       text: "JSPS fellow, then RIKEN Special Postdoctoral Researcher: single photons from carbon nanotubes on photonic chips." },

@@ -202,7 +202,12 @@ const chipOut = P(-1.5, tableTop + 1.4, 3.5), detIn = P(-5.8, tableTop + 1.5, 3.
 // ---------- Clément ----------
 const person = new THREE.Group();
 const body = Vox();
-const skin = "#efc4a0", coat = "#f4f6fa", pants = "#2b3a55", hair = "#5a3d26", beard = "#8a6650";
+const skin = "#efc4a0", coat = "#f4f6fa", pants = "#2b3a55", hair = "#5a3d26", beard = "#c49577", eyes = "#3f86d6";
+// face for the standing figures (x 1..5, y 14..17): blue eyes, light stubble on the jaw only
+const face = (x, y) => y === 17 ? (x === 2 || x === 4 ? eyes : skin)
+  : y === 16 ? (x === 1 || x === 5 ? hair : skin)
+  : y === 15 ? (x === 3 ? "#b0705c" : x === 1 || x === 5 ? beard : skin)
+  : beard;
 body.fill(1, 0, -9, 3, 1, -6, "#1f2937").fill(4, 0, -9, 6, 1, -6, "#1f2937") // shoes
   .fill(1, 1, -9, 3, 7, -7, pants).fill(4, 1, -9, 6, 7, -7, pants) // legs
   .fill(1, 7, -9, 6, 14, -7, (x, y, z) => (z === -8 && x === 3 ? (y % 2 ? "#cbd2de" : coat) : coat)) // lab coat
@@ -211,10 +216,8 @@ body.fill(1, 0, -9, 3, 1, -6, "#1f2937").fill(4, 0, -9, 6, 1, -6, "#1f2937") // 
   .fill(1, 14, -10, 6, 19, -6, skin) // head
   .fill(1, 19, -10, 6, 20, -6, hair).fill(1, 16, -10, 6, 19, -9, hair) // hair top/back
   .fill(1, 17, -10, 2, 19, -6, hair).fill(5, 17, -10, 6, 19, -6, hair) // sideburns
-  .fill(1, 18, -6, 6, 19, -5, hair) // fringe
-  .fill(1, 17, -6, 6, 18, -5, (x) => (x === 3 ? "#1f2937" : "#ff8a3d")) // laser goggles
-  .fill(1, 14, -6, 6, 16, -5, (x, y) => (x === 3 && y === 15 ? "#b0705c" : beard)) // stubble + smile
-  .fill(1, 16, -6, 2, 17, -5, beard).fill(5, 16, -6, 6, 17, -5, beard); // sideburns
+  .fill(1, 18, -6, 6, 19, -5, (x) => (x === 2 || x === 4 ? "#ff8a3d" : "#1f2937")) // laser goggles pushed up on the forehead
+  .fill(1, 14, -6, 6, 18, -5, face); // eyes, smile, light stubble
 // badge
 body.add(5, 12, -7, "#1d4ed8");
 person.add(body.build(0.03));
@@ -351,7 +354,7 @@ const sb = Vox()
   .fill(0, 13, 0, 5, 18, 4, skin) // head
   .fill(0, 18, 0, 5, 19, 4, hair).fill(0, 14, 3, 5, 18, 4, hair) // hair top/back
   .fill(0, 16, 0, 1, 18, 3, hair).fill(4, 16, 0, 5, 18, 3, hair) // sides
-  .fill(0, 13, -1, 5, 15, 0, (x, y) => (x === 2 && y === 14 ? "#b0705c" : beard)); // stubble
+  .fill(0, 13, -1, 5, 17, 0, (x, y) => face(x + 1, y + 1)); // face: blue eyes, light stubble
 seated.add(sb.build(0.03));
 function seatedArm(x) {
   const pivot = new THREE.Group(); pivot.position.set(x + 0.5, 13, 2);
@@ -393,7 +396,7 @@ bunny.add(Vox()
   .fill(1, 1, -9, 3, 7, -7, suitShade).fill(4, 1, -9, 6, 7, -7, suitShade) // legs
   .fill(1, 7, -9, 6, 14, -7, (x, y, z) => (x === 3 && z === -8 ? "#cbd5e1" : suit)) // body + zip
   .fill(1, 14, -10, 6, 20, -6, suit) // hood
-  .fill(1, 16, -6, 6, 18, -5, (x, y) => (y === 17 ? "#7dd3fc" : skin)) // eyes behind the visor
+  .fill(1, 16, -6, 6, 18, -5, (x, y) => (y === 17 ? (x === 2 || x === 4 ? eyes : "#bae6fd") : skin)) // blue eyes behind the visor
   .fill(1, 14, -6, 6, 16, -5, "#e2e8f0") // face mask
   .fill(2, 20, -9, 5, 21, -7, suitShade)
   .build(0.02));
@@ -466,8 +469,7 @@ speaker.add(Vox()
   .fill(1, 14, -10, 6, 19, -6, skin)
   .fill(1, 19, -10, 6, 20, -6, hair).fill(1, 16, -10, 6, 19, -9, hair).fill(1, 17, -10, 2, 19, -6, hair).fill(5, 17, -10, 6, 19, -6, hair)
   .fill(1, 18, -6, 6, 19, -5, hair)
-  .fill(1, 17, -6, 6, 18, -5, (x) => (x === 2 || x === 4 ? "#1e3a8a" : skin)) // eyes
-  .fill(1, 14, -6, 6, 16, -5, (x, y) => (x === 3 && y === 15 ? "#b0705c" : beard)).fill(1, 16, -6, 2, 17, -5, beard).fill(5, 16, -6, 6, 17, -5, beard)
+  .fill(1, 14, -6, 6, 18, -5, face) // blue eyes, light stubble
   .build(0.03));
 function speakerArm(x) {
   const pivot = new THREE.Group(); pivot.position.set(x + 0.5, 14, -8);
