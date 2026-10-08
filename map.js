@@ -6,15 +6,15 @@
   if (!canvas || !D) return;
   const P = D.places;
   const STOPS = [
-    { at: "toulouse", where: "Toulouse, France", when: "2012 – 2018", title: "Physics engineering at INSA Toulouse",
-      text: "Master in Physics Engineering, with research internships at the National Laboratory for Intense Magnetic Fields (LNCMI) and at LPCNO." },
-    { at: "malaysia", where: "Malaysia", when: "2016", title: "Exchange semester",
+    { at: "toulouse", where: "Toulouse, France", when: "2012 – 2018", title: "Engineering studies at INSA Toulouse",
+      text: "Master of Engineering, physics specialty, with research internships at the National Laboratory for Intense Magnetic Fields (LNCMI) and at LPCNO." },
+    { at: "malaysia", where: "Penang, Malaysia", when: "2016", title: "Exchange semester",
       text: "A semester abroad in Malaysia during my engineering studies." },
     { at: "sydney", where: "Sydney, Australia", when: "2017", title: "Astrophotonics internship",
       text: "Engineer intern at the Sydney Astrophotonics Instrumentation Laboratory, University of Sydney." },
     { at: "toulouse", where: "Toulouse, France", when: "2019 – 2023", title: "PhD, postdoc and teaching",
       text: "PhD at LAAS-CNRS on integrated long-period waveguide gratings for sensing, then postdoc at Toulouse INP (ENSEEIHT). Five years of part-time teaching of the C programming language." },
-    { at: "thailand", where: "Thailand", when: "2022", title: "Assistant Professor",
+    { at: "thailand", where: "Bangkok, Thailand", when: "2022", title: "Assistant Professor",
       text: "A two-month position as assistant professor in Thailand." },
     { at: "wako", where: "Tokyo, Japan", when: "2024 → now", title: "RIKEN Center for Advanced Photonics",
       text: "JSPS fellow, then RIKEN Special Postdoctoral Researcher at RIKEN in Wako (Tokyo): single photons from carbon nanotubes on photonic chips." },
