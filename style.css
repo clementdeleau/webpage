@@ -386,17 +386,19 @@ footer { text-align: center; color: var(--muted); padding: 40px 0 50px; font-siz
 .role { min-height: 3em; }
 
 /* Journey map */
-.journey { display: grid; grid-template-columns: 1.55fr 1fr; gap: 26px; align-items: center; padding: 22px; }
+.journey { display: grid; gap: 22px; padding: 22px; }
+.stop-panel { display: grid; grid-template-columns: 1.3fr 1fr; grid-template-rows: auto auto 1fr; column-gap: 32px; align-items: start; }
+.stop-panel > .stops { grid-column: 2; grid-row: 1 / span 3; margin-top: 0; border-top: 0; padding-top: 0; }
 .map-wrap { position: relative; border-radius: 12px; overflow: hidden; background: radial-gradient(ellipse at 60% 40%, #0d2350 0%, #04102a 75%); border: 1px solid rgba(56,189,248,.18); }
 .map-wrap::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 4px); }
 #map { display: block; width: 100%; cursor: pointer; }
 .stop-meta { display: flex; gap: 12px; font-family: var(--mono); font-size: .8rem; color: var(--accent-2); letter-spacing: .04em; text-transform: uppercase; }
 .stop-meta span + span::before { content: "·"; margin-right: 12px; color: var(--muted); }
 .stop-panel h3 { margin: 6px 0 6px; font-size: 1.2rem; }
-.stop-panel p { color: var(--muted); min-height: 5.2em; }
+.stop-panel p { color: var(--muted); }
 .stops { list-style: none; margin-top: 16px; display: grid; gap: 4px; border-top: 1px solid var(--line); padding-top: 12px; }
 .stops button { width: 100%; text-align: left; background: none; border: 0; border-left: 2px solid var(--line); padding: 5px 10px; color: var(--muted); font: inherit; font-size: .9rem; cursor: pointer; transition: color .2s, border-color .2s, background .2s; }
 .stops button span { display: inline-block; min-width: 7.5em; font-family: var(--mono); font-size: .78rem; }
 .stops button:hover { color: var(--text); }
 .stops button.on { color: var(--text); border-left-color: var(--accent-3); background: rgba(14,165,233,.08); }
-@media (max-width: 860px) { .journey { grid-template-columns: 1fr; padding: 14px; } .stop-panel p { min-height: 0; } }
+@media (max-width: 860px) { .journey { padding: 14px; } .stop-panel { grid-template-columns: 1fr; gap: 0; } .stop-panel > .stops { grid-column: auto; grid-row: auto; margin-top: 16px; border-top: 1px solid var(--line); padding-top: 12px; } .stop-panel p { min-height: 0; } }
